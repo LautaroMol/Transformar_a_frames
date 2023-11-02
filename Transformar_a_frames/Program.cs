@@ -10,7 +10,7 @@ class Programa
         {
             Console.WriteLine("por favor arrastre un video y luego presione enter");
         }
-        string video = Console.ReadLine();
+        string video = Console.ReadLine().Trim('"');
         if (System.IO.File.Exists(video) == false)
         {
             Console.Write("el archivo del video no existe");
@@ -25,6 +25,11 @@ class Programa
         var fps = captura.Get(VideoCaptureProperties.Fps);
         var framestotales = (int)captura.Get(VideoCaptureProperties.FrameCount);
         var duracion = framestotales / fps;
+        string carpeta = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\frames";
+        if (!Directory.Exists(carpeta))
+        {
+            Directory.CreateDirectory(carpeta);
+        }
         if (duracion > 10)
         {
             Console.WriteLine("el video que abrio dura mas de 10 segundos, presione enter para salir y vuelva a iniciar");
@@ -41,7 +46,7 @@ class Programa
                     if (imagen.Empty()) { break; }
                     i++;
                     var numFrame = i.ToString().PadLeft(8, '0');
-                    var NomFrame = $@"frames\imaage{numFrame}.png";
+                    var NomFrame = $@"{carpeta}\image{numFrame}.png";
                     Cv2.ImWrite(NomFrame, imagen);
 
                     ventana.ShowImage(imagen);
